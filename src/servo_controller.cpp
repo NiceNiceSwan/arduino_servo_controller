@@ -63,6 +63,7 @@ void Servo_controller::move_by_angle(int angle)
 
 void Servo_controller::test_routine()
 {
+    delay(5000);
     move_to_origin();
     delay(4000);
     move_to_angle(90);  // rotate max to the right

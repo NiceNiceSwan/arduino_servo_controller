@@ -28,17 +28,18 @@ public:
     /// @brief if you don't have a servo defined yet
     /// @param attachment_pin pin to which the servo is attached
     Servo_controller(int attachment_pin);
-    /// @brief to initialize later
+    /// @brief to initialize later. Note that as of writing this (12.01.2026, 19:02), this class does not check whether at any point the servo is attached.
     Servo_controller();
     ~Servo_controller();
 
     // setters
 
+    /// @param attachment_pin pin to which the servo is attached
     void attach(int attachment_pin) { _servo_motor.attach(attachment_pin); };
+    void detach() { _servo_motor.detach(); };
 
     // getters
 
-    /// @brief 
     /// @return angle at which the servo is 
     int position() { return _servo_motor.read(); };
 
@@ -52,7 +53,11 @@ public:
     /// @brief moves the servo by the given amount
     /// @param angle amount by which to move the servo. Negative values rotate left, positive rotate right. Will be clamped to the servo's maximum rotation angle
     void move_by_angle(int angle);
-    /// @brief tests the commands
+    /**
+     * @brief tests the control commands (`move_to_angle`, `move_to_origin`, `move_by_angle`).
+     * Note that this command uses the delay functions, and will take complete control over the program
+     * for as long as it is running.
+     */
     void test_routine();
     /// @brief takes string input from the serial port, and moves the servo accordingly
     /// @param input string containing the command (2 letters, S[A,R,H,T], followed by the angle). For example, SA90 moves the servo 90 degrees right of center
