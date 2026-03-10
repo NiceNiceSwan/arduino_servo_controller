@@ -18,7 +18,7 @@ Servo_controller::~Servo_controller()
 }
 
 
-int Servo_controller::_clamp(int value, int min_, int max_)
+int Servo_controller::_clamp(int value, const int &min_, const int &max_)
 {
     value = min(value, max_);
     value = max(value, min_);

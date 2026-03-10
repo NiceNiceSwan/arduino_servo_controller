@@ -20,7 +20,7 @@ private:
     /// @param min minimum value this can be
     /// @param max maximum value this can be
     /// @return value clamped to range min and max, including min and max
-    int _clamp(int value, int min, int max);
+    int _clamp(int value, const int &min, const int &max);
 public:
     /// @brief if you already have an attached servo
     /// @param servo servo you have already attached
