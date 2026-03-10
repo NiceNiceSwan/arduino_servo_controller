@@ -118,9 +118,9 @@ void Stepper_controller::handle_movement()
     {
         Serial.print("current Position:");
         Serial.print(_stepper_motor.currentPosition());
-        digitalWrite(ENABLE_PIN_STEPPER_MOTOR, LOW);
+        // digitalWrite(ENABLE_PIN_STEPPER_MOTOR, LOW);
         _stepper_motor.runSpeedToPosition();
-        digitalWrite(ENABLE_PIN_STEPPER_MOTOR, HIGH);
+        // digitalWrite(ENABLE_PIN_STEPPER_MOTOR, HIGH);
         _moving = true;
         return;
     }
@@ -131,9 +131,9 @@ void Stepper_controller::priority_move()
 {
     while (_stepper_motor.currentPosition() != _target_position)
     {
-        digitalWrite(ENABLE_PIN_STEPPER_MOTOR, LOW);
+        // digitalWrite(ENABLE_PIN_STEPPER_MOTOR, LOW);
         _stepper_motor.runSpeedToPosition();
-        digitalWrite(ENABLE_PIN_STEPPER_MOTOR, HIGH);
+        // digitalWrite(ENABLE_PIN_STEPPER_MOTOR, HIGH);
     }
 }
 
