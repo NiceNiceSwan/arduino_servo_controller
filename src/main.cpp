@@ -2,6 +2,7 @@
 #include <Servo.h>
 #include "servo_controller.h"
 #include "stepper_controller.h"
+#include <EEPROM.h>
 
 #define SERVO_ATTACHMENT_PIN 6
 
@@ -19,6 +20,14 @@ void setup() {
 
   stepper_controller.attach(11, 9, 10, 8);
   // stepper_controller.move_to_origin();
+
+  // test for writing to EEPROM
+  /*
+  Values stored on the EEPROM are stored as 8bit, so to read them we're gonna have to do some fucky wucky
+  bit manipulation BS or find a library to do it for us
+  though bit manipulation is probably as easy as doing `output << 8, 16, 24, 32` etc
+  */
+  // EEPROM.write(0, 127);
 }
 
 void read_servo_input();
@@ -28,6 +37,7 @@ void read_stepper_input();
 void handle_stepper_movement();
 
 void loop() {
+  // Serial.print(EEPROM.read(0));
   handle_stepper_movement();
 
   if (!Serial.available()) {
