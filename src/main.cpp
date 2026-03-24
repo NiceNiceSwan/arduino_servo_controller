@@ -17,7 +17,6 @@ void setup() {
   servo_controller.attach(SERVO_ATTACHMENT_PIN);
   servo_controller.move_to_origin();
   // servo_controller.test_routine();
-  // test
 
   stepper_controller.attach(11, 9, 10, 8);
   // stepper_controller.move_to_origin();
