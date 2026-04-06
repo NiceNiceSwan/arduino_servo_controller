@@ -35,8 +35,6 @@ private:
 
     int _attachment_pin1;
     int _attachment_pin2;
-    int _attachment_pin3;
-    int _attachment_pin4;
 
     /// @brief physical position that represents logical origin
     long _origin_offset_steps = 0;
@@ -57,13 +55,13 @@ public:
     /// @param stepper already attached stepper
     Stepper_controller(AccelStepper stepper);
     /// @brief attaches the stepper to pins
-    Stepper_controller(int pin1, int pin2, int pin3, int pin4);
+    Stepper_controller(int pin1, int pin2);
     /// @brief to initialize later. Note that as of writing this (10.03.2026, 20:08), this class does not check whether at any point the stepper is attached.
     Stepper_controller();
     ~Stepper_controller();
 
     /// @brief attach the stepper to the given pins
-    void attach(int pin1, int pin2, int pin3, int pin4);
+    void attach(int pin1, int pin2);
 
     /// @brief moves the stepper to the given position from origin
     /// @param position position from origin

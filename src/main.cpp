@@ -5,6 +5,8 @@
 #include <EEPROM.h>
 
 #define SERVO_ATTACHMENT_PIN 6
+#define DIR_PIN_MAIN_MOTOR 2
+#define STEP_PIN_MAIN_MOTOR 3
 
 Servo servo_motor;
 AccelStepper stepper_motor;
@@ -19,7 +21,7 @@ void setup() {
   servo_controller.move_to_origin();
   // servo_controller.test_routine();
 
-  stepper_controller.attach(11, 9);
+  stepper_controller.attach(STEP_PIN_MAIN_MOTOR, DIR_PIN_MAIN_MOTOR);
   // stepper_controller.move_to_origin();
 
   // test for writing to EEPROM

@@ -12,9 +12,9 @@ Stepper_controller::Stepper_controller(AccelStepper stepper)
     _stepper_motor = stepper;
 }
 
-Stepper_controller::Stepper_controller(int pin1, int pin2, int pin3, int pin4)
+Stepper_controller::Stepper_controller(int pin1, int pin2)
 {
-    attach(pin1, pin2, pin3, pin4);
+    attach(pin1, pin2);
 }
 
 Stepper_controller::Stepper_controller()
@@ -26,27 +26,28 @@ Stepper_controller::~Stepper_controller()
 {
 }
 
-void Stepper_controller::attach(int pin1, int pin2, int pin3, int pin4)
+void Stepper_controller::attach(int pin1, int pin2)
 {
-    _stepper_motor = AccelStepper(AccelStepper::FULL4WIRE, pin1, pin2, pin3, pin4);
+    _stepper_motor = AccelStepper(MOTOR_INTERFACE_TYPE, pin1, pin2);
     _stepper_motor.setMaxSpeed(MOTOR_MAX_SPEED);
     _stepper_motor.setAcceleration(MOTOR_ACCELERATION);
-    _stepper_motor.setSpeed(MOTOR_MAIN_SPEED);
+    pinMode(ENABLE_PIN_STEPPER_MOTOR, OUTPUT);
+    digitalWrite(ENABLE_PIN_STEPPER_MOTOR, HIGH);
     _moving = false;
 }
 
 void Stepper_controller::move_to_position(int position)
 {
     _target_position = _logical_to_physical(position);
-    _stepper_motor.setSpeed(_target_position > 0 ? MOTOR_MAIN_SPEED : -MOTOR_MAIN_SPEED);
     _stepper_motor.moveTo(_target_position);
+    _stepper_motor.setSpeed(_target_position > 0 ? MOTOR_MAIN_SPEED : -MOTOR_MAIN_SPEED);
 }
 
 void Stepper_controller::move_by_amount(int amount)
 {
     _target_position = _stepper_motor.currentPosition() - amount;
-    _stepper_motor.setSpeed(_target_position > 0 ? MOTOR_MAIN_SPEED : -MOTOR_MAIN_SPEED);
     _stepper_motor.moveTo(_target_position);
+    _stepper_motor.setSpeed(_target_position > 0 ? MOTOR_MAIN_SPEED : -MOTOR_MAIN_SPEED);
 }
 
 void Stepper_controller::set_origin()
@@ -57,23 +58,39 @@ void Stepper_controller::set_origin()
 void Stepper_controller::test_routine()
 {
     Serial.print("Starting test routine\n");
-    Serial.print("Move to position: 500\n");
-    move_to_position(500);
+    Serial.print("Move to position: 5000\n");
+    move_to_position(5000);
     priority_move();
+    delay(2000);
     Serial.print("Move to position: 0\n");
     move_to_position(0);
     priority_move();
-    Serial.print("Move by amount: 500\n");
-    move_by_amount(500);
+    delay(2000);
+    Serial.print("Move by amount: 5000\n");
+    move_by_amount(5000);
     priority_move();
+    delay(2000);
     Serial.print("Setting origin\n");
     set_origin();
-    Serial.print("Move to position: 500\n");
-    move_to_position(500);
+    delay(2000);
+    Serial.print("Move to position: -5000\n");
+    move_to_position(-5000);
     priority_move();
+    delay(2000);
     Serial.print("Move by amount: -1000\n");
     move_by_amount(-1000);
     priority_move();
+    delay(2000);
+    Serial.print("Move to position: 0\n");
+    move_to_position(0);
+    priority_move();
+    delay(2000);
+    Serial.print("Move by amount: -5000\n");
+    move_by_amount(-5000);
+    priority_move();
+    delay(2000);
+    Serial.print("Setting origin\n");
+    set_origin();
     Serial.print("Test routine finished\n");
 }
 
@@ -116,24 +133,25 @@ void Stepper_controller::handle_movement()
 {
     if (_stepper_motor.currentPosition() != _target_position)
     {
-        Serial.print("current Position:");
-        Serial.print(_stepper_motor.currentPosition());
-        // digitalWrite(ENABLE_PIN_STEPPER_MOTOR, LOW);
+        // Serial.print("current Position:");
+        // Serial.print(_stepper_motor.currentPosition());
+
+        digitalWrite(ENABLE_PIN_STEPPER_MOTOR, LOW);
         _stepper_motor.runSpeedToPosition();
-        // digitalWrite(ENABLE_PIN_STEPPER_MOTOR, HIGH);
         _moving = true;
         return;
     }
     _moving = false;
+    digitalWrite(ENABLE_PIN_STEPPER_MOTOR, HIGH);
 }
 
 void Stepper_controller::priority_move()
 {
+    digitalWrite(ENABLE_PIN_STEPPER_MOTOR, LOW);
     while (_stepper_motor.currentPosition() != _target_position)
     {
-        // digitalWrite(ENABLE_PIN_STEPPER_MOTOR, LOW);
         _stepper_motor.runSpeedToPosition();
-        // digitalWrite(ENABLE_PIN_STEPPER_MOTOR, HIGH);
     }
+    digitalWrite(ENABLE_PIN_STEPPER_MOTOR, HIGH);
 }
 
