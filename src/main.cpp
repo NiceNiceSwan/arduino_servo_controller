@@ -14,11 +14,12 @@ Stepper_controller stepper_controller;
 
 void setup() {
   Serial.begin(9600);
+  // Serial1.begin(9600);
   servo_controller.attach(SERVO_ATTACHMENT_PIN);
   servo_controller.move_to_origin();
   // servo_controller.test_routine();
 
-  stepper_controller.attach(11, 9, 10, 8);
+  stepper_controller.attach(11, 9);
   // stepper_controller.move_to_origin();
 
   // test for writing to EEPROM
@@ -36,7 +37,10 @@ void read_stepper_input();
 
 void handle_stepper_movement();
 
+void serial_data_receive();
+
 void loop() {
+  // serial_data_receive();
   // Serial.print(EEPROM.read(0));
   handle_stepper_movement();
 
@@ -46,6 +50,32 @@ void loop() {
 
   // read_servo_input();
   read_stepper_input();
+}
+
+String sendMessage;
+String receivedMessage;
+
+void serial_data_receive()
+{
+  while (Serial.available() > 0) {
+    char receivedChar = Serial.read();
+    if (receivedChar == '\n') {
+      Serial.println(receivedMessage);  // Print the received message in the Serial monitor
+      receivedMessage = "";  // Reset the received message
+    } else {
+      receivedMessage += receivedChar;  // Append characters to the received message
+    }
+  }
+
+  if (Serial.available() > 0) {
+    char inputChar = Serial.read();
+    if (inputChar == '\n') {
+      Serial.println(sendMessage);  // Send the message through Serial1 with a newline character
+      sendMessage = "";  // Reset the message
+    } else {
+      sendMessage += inputChar;  // Append characters to the message
+    }
+  }
 }
 
 void read_servo_input()
